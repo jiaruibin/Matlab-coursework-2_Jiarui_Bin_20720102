@@ -178,6 +178,22 @@ fprintf('%s\n', fileContent);
 
 %% TASK 2 - LED TEMPERATURE MONITORING DEVICE IMPLEMENTATION [25 MARKS]
 
+% (f)Three LED hardware pin configuration
+% Three LEDs are connected to three separate Arduino digital pins.
+% The LED long legs are connected to digital pins.
+% The LED short legs are connected to ground through 220 ohm resistors.
+
+% Digital pins connected to the LED long legs
+greenPin = 'D8';
+yellowPin = 'D9';
+redPin = 'D10';
+
+% Make sure all LEDs are initially switched off
+writeDigitalPin(a, greenPin, 0);
+writeDigitalPin(a, yellowPin, 0);
+writeDigitalPin(a, redPin, 0);
+
+
 
 
 
