@@ -59,7 +59,7 @@ fprintf('Temperature = %.2f C\n\n', testTemperature);
 % (b) Acquire temperature data for 600 seconds
 
 % Total acquisition time in seconds
-duration = 60;
+duration = 600;
 
 % Sampling interval in seconds
 sampleInterval = 1;
@@ -130,7 +130,7 @@ date = datestr(now, 'dd/mm/yyyy');
 screenText = sprintf('Data logging initiated - %s\n', date);
 screenText = [screenText, sprintf('Location - %s\n\n', location)];
 
-for m = 0:1
+for m = 0:10
     screenText = [screenText, sprintf('Minute %d\n', m)];
     screenText = [screenText, sprintf('\tTemperature %.2f C\n\n', minuteTemps(m + 1))];
 end
@@ -148,6 +148,11 @@ fprintf('%s', screenText);
 % Open file with writing permission
 fileName = 'capsule_temperature.txt';
 fileID = fopen(fileName, 'w');
+
+% Check that the file opened correctly
+if fileID == -1
+    error('Could not open capsule_temperature.txt for writing.');
+end
 
 % Write formatted text to file
 fprintf(fileID, '%s', screenText);
