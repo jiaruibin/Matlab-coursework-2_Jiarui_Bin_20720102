@@ -108,6 +108,16 @@ minTemp = min(temperatureData);
 % Average temperature
 avgTemp = mean(temperatureData);
 
+% (c) - Plot temperature against time figure
+
+figure;
+plot(timeData, temperatureData, '-o');
+xlabel('Time / s');
+ylabel('Temperature / C');
+title('Capsule Temperature Data');
+grid on;
+
+
 
 %% TASK 2 - LED TEMPERATURE MONITORING DEVICE IMPLEMENTATION [25 MARKS]
 
