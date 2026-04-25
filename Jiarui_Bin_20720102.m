@@ -34,6 +34,27 @@ for i = 1:numBlinks
 end
 
 %% TASK 1 - READ TEMPERATURE DATA, PLOT, AND WRITE TO A LOG FILE [20 MARKS]
+% (a) Arduino and thermistor setup
+
+% Analogue pin connected to the output pin of the MCP9700A sensor
+tempPin = 'A0';
+
+% Location used in the formatted output
+location = 'Nottingham';
+
+% MCP9700A sensor constants
+% V0C is the output voltage at 0 degrees Celsius
+% TC is the temperature coefficient in V/degree Celsius
+V0C = 0.500;
+TC = 0.010;
+
+% Test one voltage reading from the temperature sensor
+testVoltage = readVoltage(a, tempPin);
+testTemperature = (testVoltage - V0C) / TC;
+
+fprintf('Task 1a test reading:\n');
+fprintf('Voltage = %.3f V\n', testVoltage);
+fprintf('Temperature = %.2f C\n\n', testTemperature);
 
 
 
