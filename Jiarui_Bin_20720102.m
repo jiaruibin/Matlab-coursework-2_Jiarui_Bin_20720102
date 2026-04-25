@@ -128,7 +128,7 @@ date = datestr(now, 'dd/mm/yyyy');
 
 % Build formatted text using sprintf
 screenText = sprintf('Data logging initiated - %s\n', date);
-screenText = [screenText, sprintf('Location - %s\n\n', locationName)];
+screenText = [screenText, sprintf('Location - %s\n\n', location)];
 
 for m = 0:10
     screenText = [screenText, sprintf('Minute %d\n', m)];
@@ -162,7 +162,11 @@ if fileID == -1
     error('Could not open capsule_temperature.txt for reading.');
 end
 
+% Close the file and print the result on the command window
+fileContent = fread(fileID, '*char')';
 fclose(fileID);
+fprintf('\nContents read back from capsule_temperature.txt:\n\n');
+fprintf('%s\n', fileContent);
 
 
 
