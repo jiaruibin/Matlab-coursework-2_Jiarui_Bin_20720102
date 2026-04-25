@@ -59,7 +59,7 @@ fprintf('Temperature = %.2f C\n\n', testTemperature);
 % (b) Acquire temperature data for 600 seconds
 
 % Total acquisition time in seconds
-duration = 600;
+duration = 10;
 
 % Sampling interval in seconds
 sampleInterval = 1;
@@ -127,7 +127,7 @@ minuteTemps = interp1(timeData, temperatureData, minuteTimes, 'linear', 'extrap'
 date = datestr(now, 'dd/mm/yyyy');
 
 % Build formatted text using sprintf
-screenText = sprintf('Data logging initiated - %s\n', dateString);
+screenText = sprintf('Data logging initiated - %s\n', date);
 screenText = [screenText, sprintf('Location - %s\n\n', locationName)];
 
 for m = 0:10
@@ -142,6 +142,28 @@ screenText = [screenText, sprintf('Data logging terminated\n')];
 
 % Print formatted output to the command window
 fprintf('%s', screenText);
+
+% (e) - Write the same data to a text log file
+
+% Open file with writing permission
+fileName = 'capsule_temperature.txt';
+fileID = fopen(fileName, 'w');
+
+% Write formatted text to file
+fprintf(fileID, '%s', screenText);
+
+% Close file
+fclose(fileID);
+
+% Open the file again to check it has been written correctly
+fileID = fopen(fileName, 'r');
+
+if fileID == -1
+    error('Could not open capsule_temperature.txt for reading.');
+end
+
+fclose(fileID);
+
 
 
 
