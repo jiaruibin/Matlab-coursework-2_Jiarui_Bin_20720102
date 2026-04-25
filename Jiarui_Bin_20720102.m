@@ -117,6 +117,32 @@ ylabel('Temperature / C');
 title('Capsule Temperature Data');
 grid on;
 
+% (d) - Format output 
+
+% Extract temperatures at Minute 0, 1, 2, ..., 10
+minuteTimes = 0:60:duration;
+minuteTemps = interp1(timeData, temperatureData, minuteTimes, 'linear', 'extrap');
+
+% Date of data logging
+date = datestr(now, 'dd/mm/yyyy');
+
+% Build formatted text using sprintf
+screenText = sprintf('Data logging initiated - %s\n', dateString);
+screenText = [screenText, sprintf('Location - %s\n\n', locationName)];
+
+for m = 0:10
+    screenText = [screenText, sprintf('Minute %d\n', m)];
+    screenText = [screenText, sprintf('\tTemperature %.2f C\n\n', minuteTemps(m + 1))];
+end
+
+screenText = [screenText, sprintf('Max temp %.2f C\n', maxTemp)];
+screenText = [screenText, sprintf('Min temp %.2f C\n', minTemp)];
+screenText = [screenText, sprintf('Average temp %.2f C\n\n', avgTemp)];
+screenText = [screenText, sprintf('Data logging terminated\n')];
+
+% Print formatted output to the command window
+fprintf('%s', screenText);
+
 
 
 %% TASK 2 - LED TEMPERATURE MONITORING DEVICE IMPLEMENTATION [25 MARKS]
