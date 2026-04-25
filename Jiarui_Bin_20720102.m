@@ -193,7 +193,8 @@ writeDigitalPin(a, greenPin, 0);
 writeDigitalPin(a, yellowPin, 0);
 writeDigitalPin(a, redPin, 0);
 
-
+% Call the temperature monitoring function
+temp_monitor(a, tempPin, greenPin, yellowPin, redPin);
 
 
 
