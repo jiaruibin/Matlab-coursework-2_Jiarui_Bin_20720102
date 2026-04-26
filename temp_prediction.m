@@ -1,0 +1,1 @@
+function temp_prediction(a, tempPin, greenPin, yellowPin, redPin)
