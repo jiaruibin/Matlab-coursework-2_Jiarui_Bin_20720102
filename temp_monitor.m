@@ -5,8 +5,8 @@ function temp_monitor(a, tempPin, greenPin, yellowPin, redPin, lowerLimit, upper
 % The green LED is constant whentemperature is between 18 and 24 C. 
 % The yellow LED blinks every 0.5 sbelow this range. The red LED blinks 
 % every 0.25 s above this range.I write some codes to make the graph more 
-% readableandset an extra function that it can close the live plot window 
-% to stop monitoring.
+% readable and set a function that LEDs can be switched off when codes
+% don't work.
 
 % This function is saved as a separate .m file.
 % The Arduino object and pin names are passed from the main coursework file.
@@ -20,7 +20,6 @@ if nargin < 7
     upperLimit = 24; % Default upperlimit
 end
 
-% Sensor constants
 V0C = 0.500;      % Output voltage at 0 C, in volts
 TC = 0.010;       % Temperature coefficient, in volts per degree C
 sampleInterval = 1.0;       % seconds between temperature readings

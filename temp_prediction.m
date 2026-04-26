@@ -7,6 +7,8 @@ function temp_prediction(a, tempPin, greenPin, yellowPin, redPin)
 % faster than 4 C/min, and the green LED indicates stable temperature
 % within the comfort range.
 
+V0C = 0.500;      % Output voltage at 0 C, in volts
+TC = 0.010;       % Temperature coefficient, in volts per degree C
 lowerLimit = 18;        % Set the lowerlimit in deg C
 upperLimit = 24;        % Set the upper limit deg C
 sampleInterval = 1;     % seconds
