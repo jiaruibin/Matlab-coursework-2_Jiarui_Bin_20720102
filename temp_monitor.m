@@ -1,11 +1,12 @@
 function temp_monitor(a, tempPin, greenPin, yellowPin, redPin, lowerLimit, upperLimit)
-%TEMP_MONITOR Monitor temperature and control three LEDs using Arduino.
-% TEMP_MONITOR(a,tempPin,greenPin,yellowPin,redPin) continuously reads
-% the MCP9700A temperature sensor connected to tempPin, plots temperature
-% against time, and controls three LEDs. The green LED is constant when
-% temperature is between 18 and 24 C. The yellow LED blinks every 0.5 s
-% below this range. The red LED blinks every 0.25 s above this range.
-% I set an extra function that it can close the live plot window to stop monitoring
+%TEMP_MONITOR monitor temperature and control three LEDs using Arduino.
+% The function continuously readsthe MCP9700A temperature sensor connected 
+% to tempPin, plots temperatureagainst time, and controls three LEDs. 
+% The green LED is constant whentemperature is between 18 and 24 C. 
+% The yellow LED blinks every 0.5 sbelow this range. The red LED blinks 
+% every 0.25 s above this range.I write some codes to make the graph more 
+% readableandset an extra function that it can close the live plot window 
+% to stop monitoring
 
 % This function is saved as a separate .m file.
 % The Arduino object and pin names are passed from the main coursework file.
@@ -61,8 +62,8 @@ grid on;
 cleanupObject = onCleanup(@() switchOffLEDs(a, greenPin, yellowPin, redPin));
 
 % Continuous monitoring while loop
-while ishandle(figureHandle) % If the figure window is opened, the loop will continue to work
-
+while true
+    
     elapsedTime = toc(mainTimer); % Record time
 
 % Read voltage, convert it to temperature, store the value, and update the graph 
@@ -115,8 +116,7 @@ while ishandle(figureHandle) % If the figure window is opened, the loop will con
     % Yellow LED: blinks every 0.5 s when temperature is below 18 C.
     % Red LED: blinks every 0.25 s when temperature is above 24 C.
 
-    if ~isnan(currentTemperature)
-
+    if ~isnan(currentTemperature) % judge if data is reasonable
         % Case 1: temperature is within comfort range
         if (currentTemperature >= lowerLimit) && (currentTemperature <= upperLimit)
 
