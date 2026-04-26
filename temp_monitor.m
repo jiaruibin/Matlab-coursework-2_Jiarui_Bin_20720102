@@ -105,61 +105,44 @@ while true % Continuous monitoring while loop
     if ~isnan(currentTemperature) % judge if data is reasonable
         % Case 1: temperature is within comfort range
         if (currentTemperature >= lowerLimit) && (currentTemperature <= upperLimit)
-
             writeDigitalPin(a, greenPin, 1);
             writeDigitalPin(a, yellowPin, 0);
             writeDigitalPin(a, redPin, 0);
             yellowState = 0;
             redState = 0;
-
 % Case 2: temperature is below comfort range
-
         elseif currentTemperature < lowerLimit
 
             writeDigitalPin(a, greenPin, 0);
             writeDigitalPin(a, redPin, 0);
             redState = 0;
-
             % Toggle yellow LED every 0.5 s
-
             if elapsedTime - lastYellowToggle >= yellowInterval
                 yellowState = 1 - yellowState;
                 writeDigitalPin(a, yellowPin, yellowState);
                 lastYellowToggle = elapsedTime;
             end
-
-
         % Case 3: temperature is above comfort range
         elseif currentTemperature > upperLimit
-
             writeDigitalPin(a, greenPin, 0);
             writeDigitalPin(a, yellowPin, 0);
             yellowState = 0;
-
             % Toggle red LED every 0.25 s
-
             if elapsedTime - lastRedToggle >= redInterval
                 redState = 1 - redState;
                 writeDigitalPin(a, redPin, redState);
                 lastRedToggle = elapsedTime;
             end
-
         end
     end
-
     pause(0.02);  % Short pause for overall timing control
-
 end
-
 disp('Temperature monitoring stopped.');
-
 end % End of the function
 
 % Define the above function which should be needed for clean up command
-
 function switchOffLEDs(a, greenPin, yellowPin, redPin)
 writeDigitalPin(a, greenPin, 0);
 writeDigitalPin(a, yellowPin, 0);
 writeDigitalPin(a, redPin, 0);
-
 end
