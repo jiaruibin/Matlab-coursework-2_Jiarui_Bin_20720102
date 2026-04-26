@@ -5,6 +5,7 @@ function temp_monitor(a, tempPin, greenPin, yellowPin, redPin, lowerLimit, upper
 % against time, and controls three LEDs. The green LED is constant when
 % temperature is between 18 and 24 C. The yellow LED blinks every 0.5 s
 % below this range. The red LED blinks every 0.25 s above this range.
+% I set an extra function that it can close the live plot window to stop monitoring
 
 % This function is saved as a separate .m file.
 % The Arduino object and pin names are passed from the main coursework file.
