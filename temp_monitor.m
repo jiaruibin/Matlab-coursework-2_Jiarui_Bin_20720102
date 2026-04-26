@@ -54,8 +54,9 @@ ylabel('Temperature / C');
 title('Live Capsule Temperature Monitoring');
 grid on;
 
-% Make sure all LEDs are switched off when the function stops
-% Cleanup relating functions are on the bottom of temp_monitor function
+% To make sure all LEDs are switched off when the function stops,
+% I use cleanup command which can still work though the program stops.
+% Relating functions are on the bottom of temp_monitor function
 cleanupObject = onCleanup(@() switchOffLEDs(a, greenPin, yellowPin, redPin));
 
 % Continuous monitoring while loop
@@ -166,3 +167,12 @@ end
 disp('Temperature monitoring stopped.');
 
 end % End of the function
+
+% Define the above function which should be needed for clean up command
+
+function switchOffLEDs(a, greenPin, yellowPin, redPin)
+writeDigitalPin(a, greenPin, 0);
+writeDigitalPin(a, yellowPin, 0);
+writeDigitalPin(a, redPin, 0);
+
+end
