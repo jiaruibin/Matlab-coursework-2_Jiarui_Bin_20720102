@@ -6,7 +6,7 @@ function temp_monitor(a, tempPin, greenPin, yellowPin, redPin, lowerLimit, upper
 % The yellow LED blinks every 0.5 sbelow this range. The red LED blinks 
 % every 0.25 s above this range.I write some codes to make the graph more 
 % readableandset an extra function that it can close the live plot window 
-% to stop monitoring
+% to stop monitoring.
 
 % This function is saved as a separate .m file.
 % The Arduino object and pin names are passed from the main coursework file.
@@ -23,28 +23,18 @@ end
 % Sensor constants
 V0C = 0.500;      % Output voltage at 0 C, in volts
 TC = 0.010;       % Temperature coefficient, in volts per degree C
-
-
-% Timing settings
-
 sampleInterval = 1.0;       % seconds between temperature readings
 yellowInterval = 0.5;       % yellow LED blink interval in seconds
 redInterval = 0.25;         % red LED blink interval in seconds
-
-%Initialise data arrays
 timeData = []; % Store time
 temperatureData = []; % Store temperature
-
-%Initialize LED state
-yellowState = 0;
-redState = 0;
-
-% Initialise timing variables
+yellowState = 0; % Initial state of yellow LED
+redState = 0; % Initial state of red LED
+ 
 mainTimer = tic; % Start the timer
 lastSampleTime = -sampleInterval; % Force the first temperature sample to occur immediately
 lastYellowToggle = 0;  % Yellow LED blinking timer, 0.5 s interval
 lastRedToggle = 0; % Red LED blinking timer, 0.25 s interval
-
 currentTemperature = NaN; % No temperature has been measured before the first sensor reading.
 
 % Create live temperature plot
@@ -61,12 +51,9 @@ grid on;
 % Relating functions are on the bottom of temp_monitor function
 cleanupObject = onCleanup(@() switchOffLEDs(a, greenPin, yellowPin, redPin));
 
-% Continuous monitoring while loop
-while true
-    
-    elapsedTime = toc(mainTimer); % Record time
+while true % Continuous monitoring while loop
 
-% Read voltage, convert it to temperature, store the value, and update the graph 
+    elapsedTime = toc(mainTimer); % Record time
 
     if elapsedTime - lastSampleTime >= sampleInterval
 
@@ -107,8 +94,7 @@ while true
 
         drawnow; % Refresh graph
 
-        % Update the last sample time
-        lastSampleTime = elapsedTime;
+        lastSampleTime = elapsedTime; % Update the last sample time
     end
 
     % The loop should achieve below temperature control logic:
