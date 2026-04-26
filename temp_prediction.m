@@ -32,18 +32,45 @@ while true
     if length(tempData) >= 2 % At least two points are needed to caculate
 
         % Use the most recent Samples point to reduce noise effect
-        firstIndex = max(1, length(tempData) - Samples + 1);
-
+        firstIndex = max(1, length(tempData) - Samples + 1); % It can choose the first point every 10 points
         deltaTemp = tempData(end) - tempData(firstIndex);
-        deltaTime = timeData(end) - timeData(firstIndex);
-
+        deltaTime = timeData(end) - timeData(firstIndex); % Actually it is 10 seconds
         rateSec = deltaTemp / deltaTime;
-
     else
-
         rateSec = 0;  % The case that not enough data to calculate a rate yet
+    end
+
+    rateMin = rateSec * 60; % 1min=60s
+    predictedTemp = currentTemp + rateSec * predictionTime;
+    fprintf('Current temp: %.2f C | Rate: %.4f C/s | Predicted temp in 5 min: %.2f C\n', ...
+        currentTemp, rateSec, predictedTemp);
+
+   % case 1: temperature increasing faster than 4 C/min
+    if rateSec > rateLimitSec
+        writeDigitalPin(a, redPin, 1);
+        writeDigitalPin(a, yellowPin, 0);
+        writeDigitalPin(a, greenPin, 0);
+    % case 2: temperature decreasing faster than -4 C/min
+    elseif rateSec < -rateLimitSec
+        writeDigitalPin(a, redPin, 0);
+        writeDigitalPin(a, yellowPin, 1);
+        writeDigitalPin(a, greenPin, 0);
+    % case 3: temperature stable and within limited range
+    elseif currentTemp >= lowerLimit && currentTemp <= upperLimit
+        writeDigitalPin(a, redPin, 0);
+        writeDigitalPin(a, yellowPin, 0);
+        writeDigitalPin(a, greenPin, 1);
+    % else condition
+    else
+        writeDigitalPin(a, redPin, 0);
+        writeDigitalPin(a, yellowPin, 0);
+        writeDigitalPin(a, greenPin, 0);
 
     end
+    pause(sampleInterval); % pause 1 second
+end
+end
+
 
 
 
