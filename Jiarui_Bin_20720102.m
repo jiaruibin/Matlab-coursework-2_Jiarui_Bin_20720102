@@ -22,34 +22,23 @@ numBlinks = 10;
 
 % Blink the LED at 0.5 s intervals
 for i = 1:numBlinks
-
     % Switch LED ON
     writeDigitalPin(a, ledPin, 1);
     pause(0.5);
-
     % Switch LED OFF
     writeDigitalPin(a, ledPin, 0);
     pause(0.5);
-
 end
 
 %% TASK 1 - READ TEMPERATURE DATA, PLOT, AND WRITE TO A LOG FILE [20 MARKS]
 
 % (a) Arduino and thermistor setup
-
-% Analogue pin connected to the output pin of the MCP9700A sensor
-tempPin = 'A0';
-
-% Location used in the formatted output
+tempPin = 'A0'; % Analogue pin connected to the output pin of the MCP9700A sensor
 location = 'Nottingham';
+V0C = 0.500; % V0C is the output voltage at 0 degrees Celsius
+TC = 0.010; % V0C is the output voltage at 0 degrees Celsius
 
-% V0C is the output voltage at 0 degrees Celsius
-V0C = 0.500;
-% TC is the temperature coefficient in V/degree Celsius
-TC = 0.010;
-
-% Test one voltage reading from the temperature sensor
-testVoltage = readVoltage(a, tempPin);
+testVoltage = readVoltage(a, tempPin); % Test one voltage reading 
 testTemperature = (testVoltage - V0C) / TC;
 
 fprintf('Task 1a test reading:\n');
@@ -57,45 +46,27 @@ fprintf('Voltage = %.3f V\n', testVoltage);
 fprintf('Temperature = %.2f C\n\n', testTemperature);
 
 % (b) Acquire temperature data for 600 seconds
-
-% Total acquisition time in seconds
-duration = 600;
-
-% Sampling interval in seconds
-sampleInterval = 1;
-
+duration = 600; % Total acquisition time in seconds
+sampleInterval = 1; % Sampling interval in seconds
 % Number of samples, including time = 0 s and time = 600 s
 numSamples = floor(duration / sampleInterval) + 1;
+timeData = zeros(numSamples, 1); % store time
+voltageData = zeros(numSamples, 1); % store reading voltage
+temperatureData = zeros(numSamples, 1); % store temperature
 
-% Pre-allocate arrays for time, voltage and temperature
-timeData = zeros(numSamples, 1);
-voltageData = zeros(numSamples, 1);
-temperatureData = zeros(numSamples, 1);
-
-% Start timing
-startTimer = tic;
+startTimer = tic; % start the timer
 
 for k = 1:numSamples
-
-    % Target time for this sample
-    targetTime = (k - 1) * sampleInterval;
-
+    targetTime = (k - 1) * sampleInterval; % Target time for this sample
     % Wait until the target sampling time is reached
     while toc(startTimer) < targetTime
         pause(0.01);
     end
+    timeData(k) = toc(startTimer); % Record the actual elapsed time
+    voltageData(k) = readVoltage(a, tempPin); % read voltage
+    temperatureData(k) = (voltageData(k) - V0C) / TC; % convert voltage to temperature
 
-    % Record the actual elapsed time
-    timeData(k) = toc(startTimer);
-
-    % Read voltage from the temperature sensor
-    voltageData(k) = readVoltage(a, tempPin);
-
-    % Convert voltage to temperature using MCP9700A equation
-    temperatureData(k) = (voltageData(k) - V0C) / TC;
-
-    % Print progress every 60 seconds
-    if mod(k - 1, 60) == 0
+    if mod(k - 1, 60) == 0  % Print progress every 60 seconds
         fprintf('Acquired data at %.0f s: %.2f C\n', ...
             timeData(k), temperatureData(k));
     end
@@ -109,7 +80,6 @@ minTemp = min(temperatureData);
 avgTemp = mean(temperatureData);
 
 % (c) - Plot temperature against time figure
-
 figure;
 plot(timeData, temperatureData, '-o');
 xlabel('Time / s');
@@ -118,14 +88,10 @@ title('Capsule Temperature Data');
 grid on;
 
 % (d) - Format output 
-
 % Extract temperatures at Minute 0, 1, 2, ..., 10
 minuteTimes = 0:60:duration;
 minuteTemps = interp1(timeData, temperatureData, minuteTimes, 'linear', 'extrap');
-
-% Date of data logging
-date = datestr(now, 'dd/mm/yyyy');
-
+date = datestr(now, 'dd/mm/yyyy'); % Date of data logging
 % Build formatted text using sprintf
 screenText = sprintf('Data logging initiated - %s\n', date);
 screenText = [screenText, sprintf('Location - %s\n\n', location)];
@@ -138,15 +104,12 @@ end
 screenText = [screenText, sprintf('Max temp %.2f C\n', maxTemp)];
 screenText = [screenText, sprintf('Min temp %.2f C\n', minTemp)];
 screenText = [screenText, sprintf('Average temp %.2f C\n\n', avgTemp)];
-screenText = [screenText, sprintf('Data logging terminated\n')];
+screenText = [screenText, sprintf('Data logging terminated\n')]; %final output result
 
-% Print formatted output to the command window
-fprintf('%s', screenText);
+fprintf('%s', screenText); % Print formatted output to the command window
 
 % (e) - Write the same data to a text log file
-
-% Open file with writing permission
-fileName = 'capsule_temperature.txt';
+fileName = 'capsule_temperature.txt'; % Open file with writing permission
 fileID = fopen(fileName, 'w');
 
 % Check that the file opened correctly
@@ -154,11 +117,8 @@ if fileID == -1
     error('Could not open capsule_temperature.txt for writing.');
 end
 
-% Write formatted text to file
-fprintf(fileID, '%s', screenText);
-
-% Close file
-fclose(fileID);
+fprintf(fileID, '%s', screenText); % Write formatted text to file
+fclose(fileID); % close file
 
 % Open the file again to check it has been written correctly
 fileID = fopen(fileName, 'r');
@@ -187,19 +147,27 @@ fprintf('%s\n', fileContent);
 greenPin = 'D8';
 yellowPin = 'D9';
 redPin = 'D10';
-
 % Make sure all LEDs are initially switched off
 writeDigitalPin(a, greenPin, 0);
 writeDigitalPin(a, yellowPin, 0);
 writeDigitalPin(a, redPin, 0);
 
 % Call the temperature monitoring function
+% Tip: I set a command in temp_monitor that which can stop if 
+% figure window is closed.
 temp_monitor(a, tempPin, greenPin, yellowPin, redPin,18,24);
 
 
 
 %% TASK 3 - ALGORITHMS – TEMPERATURE PREDICTION [30 MARKS]
 
+% Reset the state of LEDs
+writeDigitalPin(a, greenPin, 0);
+writeDigitalPin(a, yellowPin, 0);
+writeDigitalPin(a, redPin, 0);
+
+% Call the temperature prediction function
+temp_prediction(a, tempPin, greenPin, yellowPin, redPin);
 
 
 
