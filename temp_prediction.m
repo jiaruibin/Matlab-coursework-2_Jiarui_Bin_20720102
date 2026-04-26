@@ -19,6 +19,32 @@ tempData = []; % array stores temperature data
 
 startTime = tic; % Start the timer
 disp('Task 3 temperature prediction started.');
+while true
+
+    currentTime = toc(startTime); % Record time
+
+    voltage = readVoltage(a, tempPin);
+    currentTemp = (voltage - V0C) / TC;
+
+    timeData(end + 1) = currentTime; % Refresh current time
+    tempData(end + 1) = currentTemp; % Refresh current temperature
+
+    if length(tempData) >= 2 % At least two points are needed to caculate
+
+        % Use the most recent Samples point to reduce noise effect
+        firstIndex = max(1, length(tempData) - Samples + 1);
+
+        deltaTemp = tempData(end) - tempData(firstIndex);
+        deltaTime = timeData(end) - timeData(firstIndex);
+
+        rateSec = deltaTemp / deltaTime;
+
+    else
+
+        rateSec = 0;  % The case that not enough data to calculate a rate yet
+
+    end
+
 
 
 
