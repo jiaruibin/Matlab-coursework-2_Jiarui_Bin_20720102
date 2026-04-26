@@ -59,9 +59,9 @@ grid on;
 cleanupObject = onCleanup(@() switchOffLEDs(a, greenPin, yellowPin, redPin));
 
 % Continuous monitoring while loop
-while ishandle(figureHandle)
+while ishandle(figureHandle) % If the figure window is opened, the loop will continue to work
 
-    elapsedTime = toc(mainTimer);
+    elapsedTime = toc(mainTimer); % Record time
 
 % Read voltage, convert it to temperature, store the value, and update the graph 
 
@@ -103,7 +103,66 @@ while ishandle(figureHandle)
         ylim([min(15, minY), max(30, maxY)]);
 
         drawnow; % Refresh graph
-        
+
         % Update the last sample time
         lastSampleTime = elapsedTime;
     end
+
+    % The loop should achieve below temperature control logic:
+    % Green LED: constant ON when temperature is between 18 C and 24 C.
+    % Yellow LED: blinks every 0.5 s when temperature is below 18 C.
+    % Red LED: blinks every 0.25 s when temperature is above 24 C.
+
+    if ~isnan(currentTemperature)
+
+        % Case 1: temperature is within comfort range
+        if (currentTemperature >= lowerLimit) && (currentTemperature <= upperLimit)
+
+            writeDigitalPin(a, greenPin, 1);
+            writeDigitalPin(a, yellowPin, 0);
+            writeDigitalPin(a, redPin, 0);
+            yellowState = 0;
+            redState = 0;
+
+% Case 2: temperature is below comfort range
+
+        elseif currentTemperature < lowerLimit
+
+            writeDigitalPin(a, greenPin, 0);
+            writeDigitalPin(a, redPin, 0);
+            redState = 0;
+
+            % Toggle yellow LED every 0.5 s
+
+            if elapsedTime - lastYellowToggle >= yellowInterval
+                yellowState = 1 - yellowState;
+                writeDigitalPin(a, yellowPin, yellowState);
+                lastYellowToggle = elapsedTime;
+            end
+
+
+        % Case 3: temperature is above comfort range
+        elseif currentTemperature > upperLimit
+
+            writeDigitalPin(a, greenPin, 0);
+            writeDigitalPin(a, yellowPin, 0);
+            yellowState = 0;
+
+            % Toggle red LED every 0.25 s
+
+            if elapsedTime - lastRedToggle >= redInterval
+                redState = 1 - redState;
+                writeDigitalPin(a, redPin, redState);
+                lastRedToggle = elapsedTime;
+            end
+
+        end
+    end
+
+    pause(0.02);  % Short pause for overall timing control
+
+end
+
+disp('Temperature monitoring stopped.');
+
+end % End of the function
