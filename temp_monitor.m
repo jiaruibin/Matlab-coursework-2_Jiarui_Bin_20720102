@@ -1,9 +1,9 @@
 function temp_monitor(a, tempPin, greenPin, yellowPin, redPin, lowerLimit, upperLimit)
 %TEMP_MONITOR monitor temperature and control three LEDs using Arduino.
 % The function continuously readsthe MCP9700A temperature sensor connected 
-% to tempPin, plots temperatureagainst time, and controls three LEDs. 
-% The green LED is constant whentemperature is between 18 and 24 C. 
-% The yellow LED blinks every 0.5 sbelow this range. The red LED blinks 
+% to tempPin, plots temperature against time, and controls three LEDs. 
+% The green LED is constant when temperature is between 18 and 24 C. 
+% The yellow LED blinks every 0.5 s below this range. The red LED blinks 
 % every 0.25 s above this range.I write some codes to make the graph more 
 % readable, to stop the codes when figure window is closed, and set a 
 % function that LEDs can be switched off when codes don't work.
