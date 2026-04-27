@@ -50,7 +50,7 @@ grid on;
 % Relating functions are on the bottom of temp_monitor function
 cleanupObject = onCleanup(@() switchOffLEDs(a, greenPin, yellowPin, redPin));
 
-while true % Continuous monitoring while loop
+while ishandle(figureHandle)  % Continuous monitoring while loop (I set a stop method by closing figure window)
 
     elapsedTime = toc(mainTimer); % Record time
 
